@@ -39,6 +39,8 @@ dependencies:
   font_awesome_flutter: ^10.3.0
   geolocator: ^9.0.2
   http: ^1.1.0
+  geocoding: ^2.1.0
+  weather: ^3.1.0
 
 
 dev_dependencies:

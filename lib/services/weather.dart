@@ -7,6 +7,20 @@ class WeatherModel {
   late double temp;
   late int weatherId;
   late String name;
+  late String image;
+  Future<void> getCityLocationWeather(String cityName) async {
+    // WeatherFactory wf = WeatherFactory(kApiKey);
+    // Weather w = await wf.currentWeatherByCityName(cityName);
+    // temp = w.temperature as double;
+    Map<String, dynamic> weatherInfo = await NetworkHelper(
+            url:
+                "https://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$kApiKey&units=metric")
+        .getData();
+    temp = weatherInfo['main']['temp'];
+    weatherId = weatherInfo['weather'][0]['id'];
+    cityName = weatherInfo['name'];
+    name = cityName;
+  }
 
   Future<void> getCurrentLocationWeather() async {
     Location location = Location();
@@ -17,7 +31,6 @@ class WeatherModel {
           'lat=${location.lat}&lon=${location.long}'
           '&appid=$kApiKey&units=metric',
     ).getData();
-
     temp = weatherInfo['main']['temp'];
     weatherId = weatherInfo['weather'][0]['id'];
     name = weatherInfo['name'];
@@ -52,6 +65,26 @@ class WeatherModel {
       return 'You\'ll need 🧣 and 🧤';
     } else {
       return 'Bring a 🧥 just in case';
+    }
+  }
+
+  String getImage() {
+    if (weatherId < 300) {
+      return 'images/cold.jpeg';
+    } else if (weatherId < 400) {
+      return 'images/cold.jpeg';
+    } else if (weatherId < 600) {
+      return 'images/cold.jpeg';
+    } else if (weatherId < 700) {
+      return 'images/winter.jpeg';
+    } else if (weatherId < 800) {
+      return 'images/winter.jpeg';
+    } else if (weatherId == 800) {
+      return 'images/summer.jpeg';
+    } else if (weatherId <= 804) {
+      return 'images/spring.jpeg';
+    } else {
+      return '🤷‍';
     }
   }
 }
