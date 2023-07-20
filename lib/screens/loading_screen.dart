@@ -16,8 +16,9 @@ class LoadingScreenState extends State<LoadingScreen> {
     WeatherModel weatherInfo = WeatherModel();
     await weatherInfo.getCurrentLocationWeather();
     await weatherInfo.getCurrentLocationWeatherFiveDays();
-
     isLoading = true;
+    setState(() {});
+
     if (mounted) {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return LocationScreen(
