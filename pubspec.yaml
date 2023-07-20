@@ -41,7 +41,25 @@ dependencies:
   http: ^1.1.0
   geocoding: ^2.1.0
   weather: ^3.1.0
+  flutter_native_splash: ^2.3.1
+  flutter_launcher_icons: ^0.13.1
+  date_format: ^2.0.7
 
+flutter_launcher_icons:
+  android: launcher_icon
+  ios: true
+  image_path: images/Splash.png
+  min_sdk_android: 21 # android min sdk min:16, default 21
+
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: images/Splash.png
+  android_gravity: center
+android_12:
+  color: "#ffffff"
+  image: images/Splash.png
+  android_gravity: center
 
 dev_dependencies:
   flutter_test:

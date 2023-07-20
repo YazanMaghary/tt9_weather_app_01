@@ -20,6 +20,8 @@ class CityScreenState extends State<CityScreen> {
   late String icon;
   late String description;
   late Weather w;
+  late List<double> tempList;
+  late List<String> iconList;
   String errorText = '';
   WeatherFactory wf = WeatherFactory(kApiKey);
   GlobalKey<FormState> formKey = GlobalKey();
@@ -30,13 +32,18 @@ class CityScreenState extends State<CityScreen> {
     // widget.weatherData.name = w.areaName!;
     // widget.weatherData.weatherId = w.weatherConditionCode!;
     await widget.weatherData.getCityLocationWeather(cityName);
+    await widget.weatherData.getCitytLocationWeatherFiveDays(cityName);
     temp = widget.weatherData.temp.toInt();
     icon = widget.weatherData.getWeatherIcon();
     description = widget.weatherData.getMessage();
     cityName = widget.weatherData.name;
+    tempList = widget.weatherData.tempList;
+    iconList = widget.weatherData.iconList;
     Navigator.push(context, MaterialPageRoute(
       builder: (context) {
-        return LocationScreen(weatherData: widget.weatherData);
+        return LocationScreen(
+          weatherData: widget.weatherData,
+        );
       },
     ));
   }
@@ -45,9 +52,10 @@ class CityScreenState extends State<CityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/city_background.jpg'),
+            image: AssetImage('images/backGround.jpeg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -55,49 +63,52 @@ class CityScreenState extends State<CityScreen> {
         child: SafeArea(
           child: Column(
             children: <Widget>[
-              Align(
-                alignment: Alignment.topLeft,
-                child: TextButton(
-                  onPressed: () async {
-                    await widget.weatherData.getCurrentLocationWeather();
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => LocationScreen(
-                              weatherData: widget.weatherData,
-                            )));
-                  },
-                  child: const Icon(
-                    Icons.arrow_back_ios,
-                    size: 50.0,
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(20.0),
-                child: Form(
-                  key: formKey,
-                  child: TextFormField(
-                    style: const TextStyle(color: Colors.white),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please Enter a City ";
-                      }
-                      cityName = value;
-                      return null;
+              Expanded(
+                flex: 1,
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: TextButton(
+                    onPressed: () async {
+                      await widget.weatherData.getCurrentLocationWeather();
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => LocationScreen(
+                                weatherData: widget.weatherData,
+                              )));
                     },
-                    decoration: const InputDecoration(
-                        labelStyle: TextStyle(color: Colors.white),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white)),
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(22))),
-                        label: Text("Enter your city name")),
+                    child: const Icon(
+                      Icons.arrow_back_ios,
+                      size: 40.0,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.all(20.0),
-                child: null,
+              Expanded(
+                flex: 1,
+                child: Container(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Form(
+                    key: formKey,
+                    child: TextFormField(
+                      style: const TextStyle(color: Colors.white),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please Enter a City ";
+                        }
+                        cityName = value;
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                          labelStyle: TextStyle(color: Colors.white),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white)),
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(22))),
+                          label: Text("Enter your city name")),
+                    ),
+                  ),
+                ),
               ),
               TextButton(
                 onPressed: () async {
@@ -119,12 +130,15 @@ class CityScreenState extends State<CityScreen> {
               const SizedBox(
                 height: 20,
               ),
-              Text(
-                errorText,
-                style: const TextStyle(
-                    fontSize: 32,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
+              Expanded(
+                flex: 2,
+                child: Text(
+                  errorText,
+                  style: const TextStyle(
+                      fontSize: 32,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                ),
               )
             ],
           ),

@@ -11,9 +11,12 @@ class LoadingScreen extends StatefulWidget {
 
 class LoadingScreenState extends State<LoadingScreen> {
   bool isLoading = false;
+  int index = 0;
   Future<void> getWeatherData() async {
     WeatherModel weatherInfo = WeatherModel();
     await weatherInfo.getCurrentLocationWeather();
+    await weatherInfo.getCurrentLocationWeatherFiveDays();
+
     isLoading = true;
     if (mounted) {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -26,6 +29,7 @@ class LoadingScreenState extends State<LoadingScreen> {
 
   @override
   void initState() {
+    // getWeatherDataFiveDays();
     getWeatherData();
     super.initState();
   }

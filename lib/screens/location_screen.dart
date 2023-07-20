@@ -8,6 +8,7 @@ import '../utilities/constants.dart';
 
 class LocationScreen extends StatefulWidget {
   final WeatherModel weatherData;
+
   const LocationScreen({super.key, required this.weatherData});
 
   @override
@@ -20,12 +21,21 @@ class LocationScreenState extends State<LocationScreen> {
   late String icon;
   late String description;
   late String image;
+  late List<double> tempList;
+  late List<String> iconList;
+  late List date;
+  int index = 0;
+  // WeatherModel weatherInfo = WeatherModel();
+
   void updateUi() {
     temp = widget.weatherData.temp.toInt();
     cityName = widget.weatherData.name;
     icon = widget.weatherData.getWeatherIcon();
     description = widget.weatherData.getMessage();
     image = widget.weatherData.getImage();
+    tempList = widget.weatherData.tempList;
+    iconList = widget.weatherData.iconList;
+    date = widget.weatherData.date;
   }
 
   @override
@@ -73,6 +83,8 @@ class LocationScreenState extends State<LocationScreen> {
                       TextButton(
                         onPressed: () async {
                           await widget.weatherData.getCurrentLocationWeather();
+                          await widget.weatherData
+                              .getCurrentLocationWeatherFiveDays();
                           // ignore: use_build_context_synchronously
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => LocationScreen(
@@ -160,6 +172,48 @@ class LocationScreenState extends State<LocationScreen> {
                     textAlign: TextAlign.right,
                     style: kMessageTextStyle,
                   ),
+                  Container(
+                    decoration:
+                        BoxDecoration(color: Colors.white.withOpacity(0.1)),
+                    padding: const EdgeInsets.all(12),
+                    height: 150,
+                    child: Center(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 5,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 5),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "${iconList[index]}",
+                                    style: const TextStyle(fontSize: 32),
+                                  ),
+                                  Text(
+                                    "${tempList[index].floor()}",
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
+                                  Text(
+                                    "${date[index]}",
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 20),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                   ClipRRect(
                     child: Container(
                       padding: const EdgeInsets.all(34),
@@ -167,7 +221,9 @@ class LocationScreenState extends State<LocationScreen> {
                         child: Text(
                           cityName,
                           style: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
                         ),
                       ),
                     ),
